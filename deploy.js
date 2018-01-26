@@ -13,18 +13,17 @@ const web3 = new Web3(provider);
 
 // Using function for async/await usage
 const deploy = async () => {
-  const INITIAL_STRING = 'Hi there!';
   const accounts = await web3.eth.getAccounts();
   
   console.log('Attempting to deploy from account:', accounts[0]);
   
   const result = await new web3.eth.Contract(JSON.parse(interface))
-    .deploy({ data: bytecode, arguments: [INITIAL_STRING] })
+    .deploy({ data: bytecode })
     .send({ gas: '1000000', from: accounts[0] });
     
   console.log('Contract deployed to:', result.options.address);
 };
 
 deploy();
-// contract address
-// 0xD874DD715c866E74e570b7F5e6675f605B014BA1
+// deployed contract address
+// 
