@@ -55,7 +55,7 @@ describe('Lottery Contract', () => {
       from: accounts[2],
       value: web3.utils.toWei('0.02', 'ether')
     });
-    
+
     // Get players array
     const players = await lottery.methods.getPlayers().call({
       from: accounts[0]
@@ -69,16 +69,17 @@ describe('Lottery Contract', () => {
   });
   
   it('should allow entry with required amount of ether', async () => {
-    
     try {
       await lottery.methods.enter().send({
         from: accounts[0],
       value: web3.utils.toWei('0.02', 'ether')
       });
     } catch (err) {
+      // If err then test failed
       assert(false);
       return;
     }
+    // If no error, test passed
     assert(true);
   });
   
@@ -89,9 +90,11 @@ describe('Lottery Contract', () => {
         value: 200
       });
     } catch (err) {
+      // if err, test passed
       assert(true);
       return;
     }
+    // if no error, test failed
     assert(false);
   });
   
@@ -111,9 +114,11 @@ describe('Lottery Contract', () => {
         from: accounts[0]
       });
     } catch (err) {
+      // If error, test fails
       assert(false);
       return;
     }
+    // If no error, test passes
     assert(true);
   });
   
@@ -127,20 +132,21 @@ describe('Lottery Contract', () => {
       from: accounts[1],
       value: web3.utils.toWei('0.02', 'ether')
     });    
-    
+
     try {
       await lottery.methods.pickWinner().send({
         from: accounts[1]
       });
     } catch (err) {
+      // If error, test passes
       assert(true);
       return;
     }
+    // If no error, test fails
     assert(false);
   });
-  
-  it('should send ether to winner and reset players array', async () => {
 
+  it('should send ether to winner and reset players array', async () => {
     // Entry - only one to simplify test
     await lottery.methods.enter().send({
       from: accounts[1],
