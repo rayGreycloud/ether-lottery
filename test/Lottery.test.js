@@ -69,6 +69,7 @@ describe('Lottery Contract', () => {
   });
   
   it('should allow entry with required amount of ether', async () => {
+    
     try {
       await lottery.methods.enter().send({
         from: accounts[0],
@@ -86,6 +87,50 @@ describe('Lottery Contract', () => {
       await lottery.methods.enter().send({
         from: accounts[0],
         value: 200
+      });
+    } catch (err) {
+      assert(true);
+      return;
+    }
+    assert(false);
+  });
+  
+  it('should allow manager to call pickWinner', async () => {
+    // Accounts enter lottery
+    await lottery.methods.enter().send({
+      from: accounts[0],
+      value: web3.utils.toWei('0.02', 'ether')
+    });
+    await lottery.methods.enter().send({
+      from: accounts[1],
+      value: web3.utils.toWei('0.02', 'ether')
+    });
+    // attempt pickWinner     
+    try {
+      await lottery.methods.pickWinner().send({
+        from: accounts[0]
+      });
+    } catch (err) {
+      assert(false);
+      return;
+    }
+    assert(true);
+  });
+  
+  it('should not allow non-manager to call pickWinner', async () => {
+    // Accounts enter lottery
+    await lottery.methods.enter().send({
+      from: accounts[0],
+      value: web3.utils.toWei('0.02', 'ether')
+    });
+    await lottery.methods.enter().send({
+      from: accounts[1],
+      value: web3.utils.toWei('0.02', 'ether')
+    });    
+    
+    try {
+      await lottery.methods.pickWinner().send({
+        from: accounts[1]
       });
     } catch (err) {
       assert(true);
