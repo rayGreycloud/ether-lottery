@@ -1,4 +1,5 @@
 const HDWalletProvider = require('truffle-hdwallet-provider');
+const fs = require('fs');
 const Web3 = require('web3');
 const { interface, bytecode } = require('./compile');
 
@@ -20,8 +21,12 @@ const deploy = async () => {
   const result = await new web3.eth.Contract(JSON.parse(interface))
     .deploy({ data: bytecode })
     .send({ gas: '1000000', from: accounts[0] });
-    
+  
+  fs.writeFile('contractDeployed.txt', result.options.address);
+  fs.appendFile('contractDeployed.txt', interface);
+  
   console.log('Contract deployed to:', result.options.address);
+  console.log(interface);  
 };
 
 deploy();
