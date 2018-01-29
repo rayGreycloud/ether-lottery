@@ -3,7 +3,7 @@ pragma solidity ^0.4.17;
 contract Lottery {
   address public manager;
   address[] public players;
-  address public winner;
+  address public lastWinner;
   
   function Lottery() public {
     manager = msg.sender;
@@ -19,14 +19,12 @@ contract Lottery {
     return uint(keccak256(block.difficulty,now, players));
   }
   
-  function pickWinner() public restricted returns (address) {
+  function pickWinner() public restricted {
     require(players.length > 0);
     uint index = random() % players.length;
-    winner = players[index];    
+    lastWinner = players[index];    
     players[index].transfer(this.balance);
     players = new address[](0);
-    
-    return winner;
   }
   
   modifier restricted() {
@@ -37,5 +35,8 @@ contract Lottery {
   function getPlayers() public view returns (address[]) {
     return players;
   }
-
+  
+  function getLastWinner() public view returns (address) {
+    return lastWinner;
+  }
 }
